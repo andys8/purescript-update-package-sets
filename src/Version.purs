@@ -9,6 +9,11 @@ import Data.Maybe (Maybe(..), maybe)
 import Data.String (Pattern(..), split)
 import Data.String.Regex (match, regex)
 import Data.String.Regex.Flags (noFlags)
+import Data.Tuple (Tuple(..))
+import Partial.Unsafe (unsafeCrashWith)
+
+type Suffix
+  = String
 
 data Version
   = Version
@@ -18,8 +23,7 @@ data Version
     , suffix :: Maybe Suffix
     }
 
-type Suffix
-  = String
+derive instance eqVersion :: Eq Version
 
 instance showVersion :: Show Version where
   show (Version { major, minor, patch, suffix }) = "v" <> versionString <> suffixString
@@ -28,10 +32,22 @@ instance showVersion :: Show Version where
 
     suffixString = maybe "" ((<>) "-") suffix
 
-derive instance eqVersion :: Eq Version
-
--- TODO: Compare suffix
-derive instance ordVersion :: Ord Version
+instance ordVersion :: Ord Version where
+  compare (Version v1) (Version v2) =
+    let
+      versionCompared =
+        compare
+          { major: v1.major, minor: v1.minor, patch: v1.patch }
+          { major: v2.major, minor: v2.minor, patch: v2.patch }
+    in
+      if versionCompared /= EQ then
+        versionCompared
+      else case Tuple v1.suffix v2.suffix of
+        Tuple Nothing Nothing -> unsafeCrashWith "Unexpected"
+        Tuple Nothing _ -> GT
+        Tuple _ Nothing -> LT
+        -- Comparing suffix strings can be wrong
+        Tuple (Just a) (Just b) -> compare a b
 
 parseVersion :: String -> Either String Version
 parseVersion str = do
