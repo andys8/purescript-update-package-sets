@@ -9,7 +9,10 @@ import Simple.Ajax (AjaxError, get)
 type Tag
   = { name :: String }
 
-requestTags :: Aff (Array String)
+type TagName
+  = String
+
+requestTags :: Aff (Array TagName)
 requestTags = do
   let
     repository = { user: "andys8", repo: "git-brunch" }
