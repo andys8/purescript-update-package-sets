@@ -16,5 +16,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Cache PureScript dependencies
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-spago-${{hashFiles('**/*.dhall')}}-${{hashFiles('package-lock.json')}}
+          path: |
+            node_modules
+            .spago
+            output
       - run: npm install
       - run: npm start ${{ secrets.GITHUB_TOKEN }}
