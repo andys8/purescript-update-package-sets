@@ -12,16 +12,19 @@ type Tag
 type TagName
   = String
 
-requestTags :: Aff (Array TagName)
-requestTags = do
-  let
-    repository = { user: "andys8", repo: "git-brunch" }
+type Repository
+  = { repoUser :: String
+    , repoName :: String
+    }
+
+requestTags :: Repository -> Aff (Array TagName)
+requestTags repository = do
   resp <- get $ tagUrlApiUrl repository :: Aff (Either AjaxError (Array Tag))
   pure $ either (const []) ((<$>) _.name) resp
 
-tagUrlApiUrl :: { user :: String, repo :: String } -> URL
-tagUrlApiUrl { user, repo } = baseURL <> path
+tagUrlApiUrl :: Repository -> URL
+tagUrlApiUrl { repoUser, repoName } = baseURL <> path
   where
   baseURL = "https://api.github.com"
 
-  path = "/repos/" <> user <> "/" <> repo <> "/tags"
+  path = "/repos/" <> repoUser <> "/" <> repoName <> "/tags"

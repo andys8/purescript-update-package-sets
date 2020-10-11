@@ -3,10 +3,10 @@ module Version (parseVersion, Version) where
 import Prelude
 import Data.Array (catMaybes, intercalate, mapMaybe)
 import Data.Array.NonEmpty (toArray)
-import Data.Either (Either(..), note)
+import Data.Either (Either(..))
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..))
-import Data.String (Pattern(..), split, stripPrefix)
+import Data.String (Pattern(..), split)
 import Data.String.Regex (match, regex)
 import Data.String.Regex.Flags (noFlags)
 

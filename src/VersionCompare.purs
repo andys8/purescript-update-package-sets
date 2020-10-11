@@ -29,19 +29,24 @@ check packages = traverse f packages
     pure $ Tuple package result
 
 comparePackage :: Package -> Aff VersionComparison
-comparePackage package = do
-  tags <- requestTags
+comparePackage package@(Package { repoUser, repoName }) = do
+  tags <- requestTags { repoUser, repoName }
   let
     versions = mapMaybe (hush <<< parseVersion) tags
   pure $ compareVersions package versions
 
 compareVersions :: Package -> Array Version -> VersionComparison
-compareVersions (Package { version: currentVersion }) allVersions = case latestVersion of
-  Just version
-    | version == currentVersion -> VersionOkay currentVersion
-  Just version
-    | version > currentVersion -> VersionOutdated currentVersion version
+compareVersions (Package { version: pkgVersion }) allVersions = case last $ sort allVersions of
+  Just latestVersion
+    | latestVersion == pkgVersion -> VersionOkay pkgVersion
+  Just latestVersion
+    | latestVersion > pkgVersion -> VersionOutdated pkgVersion latestVersion
+  Just latestVersion
+    | latestVersion < pkgVersion ->
+      VersionComparisonFailed
+        $ "Actual version "
+        <> show pkgVersion
+        <> " is newer than on github "
+        <> show latestVersion
   Just _ -> VersionComparisonFailed $ "Recent version not found on github"
   Nothing -> VersionComparisonFailed "No version tags found"
-  where
-  latestVersion = last $ sort allVersions
