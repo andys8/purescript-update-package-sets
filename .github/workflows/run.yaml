@@ -1,6 +1,9 @@
 name: Compare package-sets versions
 
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: "0 3 * * *"
 
 jobs:
   run:
@@ -18,4 +21,5 @@ jobs:
             output
       - run: npm install
       - run: npm run build
-      - run: npm start ${{ secrets.GITHUB_TOKEN }}
+      - name: Compare versions
+        run: npm start ${{ secrets.GITHUB_TOKEN }}
