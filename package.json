@@ -1,0 +1,30 @@
+{
+  "name": "purescript-update-package-sets",
+  "version": "1.0.0",
+  "description": "Update package sets",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "postinstall": "spago install",
+    "build": "spago build",
+    "start": "spago run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andys8/purescript-update-package-sets.git"
+  },
+  "author": "andys8",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andys8/purescript-update-package-sets/issues"
+  },
+  "homepage": "https://github.com/andys8/purescript-update-package-sets#readme",
+  "devDependencies": {
+    "spago": "0.16.0"
+  },
+  "dependencies": {
+    "xhr2": "0.2.0"
+  }
+}
