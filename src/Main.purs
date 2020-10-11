@@ -1,25 +1,31 @@
 module Main where
 
 import Prelude
-import Data.Array (take)
 import Data.Traversable (for_)
-import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
+import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
-import PackageSets (Package(..), requestPackages)
-import VersionCompare (VersionComparison, check)
+import Github (GithubToken(..))
+import Node.Process (argv, exit)
+import PackageSets (requestPackages)
+import VersionCompare (VersionComparison(..), comparePackage)
 
 main :: Effect Unit
 main = do
-  launchAff_ printInformationFromApis
+  arguments <- argv
+  case arguments of
+    [ _, _, token ]
+      | token /= "" -> launchAff_ $ run (GithubToken token)
+    _ -> log $ "Usage: npm start <github-token>"
 
-printInformationFromApis :: Aff Unit
-printInformationFromApis = do
-  versions <- take 20 <$> requestPackages
-  result <- check versions
-  for_ result $ printResult >>> log
-  pure unit
-
-printResult :: Tuple Package VersionComparison -> String
-printResult (Tuple (Package { name }) result) = name <> " " <> show result
+run :: GithubToken -> Aff Unit
+run token = do
+  packages <- requestPackages
+  for_ packages
+    $ \package -> do
+        comparison <- comparePackage token package
+        case comparison of
+          VersionOkay _ -> pure unit
+          _ -> log $ show package <> " " <> show comparison
+  liftEffect $ exit 0

@@ -9,7 +9,7 @@
   "scripts": {
     "postinstall": "spago install",
     "build": "spago build",
-    "start": "spago run"
+    "start": "spago run -a"
   },
   "repository": {
     "type": "git",

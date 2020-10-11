@@ -34,7 +34,7 @@ data Package
     }
 
 instance showPackage :: Show Package where
-  show (Package { name }) = "Package " <> name
+  show (Package { name, repoUser, repoName }) = name <> " (" <> repoUser <> "/" <> repoName <> ")"
 
 requestPackages :: Aff (Array Package)
 requestPackages = do
