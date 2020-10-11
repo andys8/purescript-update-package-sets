@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/andys8/purescript-update-package-sets#readme",
   "devDependencies": {
+    "purescript": "0.13.8",
     "spago": "0.16.0"
   },
   "dependencies": {
