@@ -5,7 +5,7 @@ import Data.Array (catMaybes, intercalate, mapMaybe)
 import Data.Array.NonEmpty (toArray)
 import Data.Either (Either(..))
 import Data.Int (fromString)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), maybe)
 import Data.String (Pattern(..), split)
 import Data.String.Regex (match, regex)
 import Data.String.Regex.Flags (noFlags)
@@ -22,12 +22,15 @@ type Suffix
   = String
 
 instance showVersion :: Show Version where
-  show (Version { major, minor, patch }) = "v" <> versionString
+  show (Version { major, minor, patch, suffix }) = "v" <> versionString <> suffixString
     where
     versionString = intercalate "." $ show <$> [ major, minor, patch ]
 
+    suffixString = maybe "" ((<>) "-") suffix
+
 derive instance eqVersion :: Eq Version
 
+-- TODO: Compare suffix
 derive instance ordVersion :: Ord Version
 
 parseVersion :: String -> Either String Version

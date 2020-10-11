@@ -50,14 +50,16 @@ mkPackage (Tuple name { repo, version: versionString, dependencies }) =
         { repoUser, repoName } <- parseGithubRepo repo
         pure $ Package { name, dependencies, repoName, repoUser, version }
 
--- TODO: Clean up variable names
 parseGithubRepo :: String -> Either String { repoUser :: String, repoName :: String }
 parseGithubRepo str = do
   let
-    y = fromMaybe str $ stripSuffix (Pattern "/") str
-
-    x = fromMaybe y $ stripSuffix (Pattern ".git") y
-  z <- note "Not a github repository" $ stripPrefix (Pattern "https://github.com/") x
-  case split (Pattern "/") z of
+    cleanedStr = ignoreSuffix ".git" $ ignoreSuffix "/" str
+  repoString <-
+    note "Not a github repository"
+      $ stripPrefix (Pattern "https://github.com/") cleanedStr
+  case split (Pattern "/") repoString of
     [ repoUser, repoName ] -> Right { repoUser, repoName }
     _ -> Left $ "Couldn't extract user and repo of url " <> str
+
+ignoreSuffix :: String -> String -> String
+ignoreSuffix suffix str = fromMaybe str $ stripSuffix (Pattern suffix) str

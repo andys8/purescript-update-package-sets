@@ -35,7 +35,6 @@ comparePackage token package@(Package { repoUser, repoName }) = do
     versions = mapMaybe (hush <<< parseVersion) tags
   pure $ compareVersions package versions
 
--- TODO: Compare suffix
 compareVersions :: Package -> Array Version -> VersionComparison
 compareVersions (Package package) allVersions =
   let
