@@ -20,7 +20,7 @@ mkIssueContent packageComparison = { title, body, state }
     if M.isEmpty packageComparison then
       "All packages up-to-date ✔️"
     else
-      (show $ M.size packageComparison) <> " packages affected ⚠️"
+      (show $ M.size packageComparison) <> " package(s) ⚠️"
 
   body = intercalate "\n\n" $ [ packages, explainer ]
 
