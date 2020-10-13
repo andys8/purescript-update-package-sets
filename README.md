@@ -2,9 +2,6 @@
 
 Check purescript package sets for newer versions.
 
-Will update this github issue:
-<https://github.com/purescript/package-sets/issues/728>
-
 ## Usage
 
 ```shell
@@ -19,3 +16,8 @@ spago run -a <github-token>
 
 CI is daily checking if there are updates available:
 <https://github.com/andys8/purescript-update-package-sets/actions>
+
+The script will also keep [this github issue](https://github.com/purescript/package-sets/issues/728) up-to-date.
+
+- (Re-)open or close it, if packages are outdated
+- Update the content with packages and their newest available versions
