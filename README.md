@@ -1,8 +1,9 @@
 # purescript-update-package-sets
 
-Check purescript package sets for newer versions
+Check purescript package sets for newer versions.
 
-<https://github.com/purescript/package-sets/issues/704>
+Will update this github issue:
+<https://github.com/purescript/package-sets/issues/728>
 
 ## Usage
 
