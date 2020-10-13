@@ -17,8 +17,8 @@ data VersionComparison
   | VersionComparisonFailed String
 
 instance showVersionComparison :: Show VersionComparison where
-  show (VersionOkay v) = "✔ " <> show v
-  show (VersionOutdated v1 v2) = "✖ " <> show v1 <> " -> " <> show v2
+  show (VersionOkay v) = show v <> " ✔"
+  show (VersionOutdated v1 v2) = show v1 <> " -> " <> show v2 <> " ✖"
   show (VersionComparisonFailed err) = "[ERROR] " <> err
 
 runComparison :: GithubToken -> Array Package -> Aff (Array (Tuple Package VersionComparison))
