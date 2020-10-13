@@ -26,10 +26,8 @@ type Repository
 type IssueContent
   = { title :: String
     , body :: String
+    , state :: String
     }
-
-baseURL :: URL
-baseURL = "https://api.github.com"
 
 requestTags :: GithubToken -> Repository -> Aff (Array TagName)
 requestTags token repository = do
@@ -48,16 +46,13 @@ requestTags token repository = do
       <> repoName
       <> "/tags"
 
-apiHeaders :: GithubToken -> RequestHeader
-apiHeaders (GithubToken token) = RequestHeader "Authorization" ("Bearer " <> token)
-
 requestPatchIssue :: GithubToken -> IssueContent -> Aff Unit
-requestPatchIssue token { title, body } = do
+requestPatchIssue token issueContent = do
   resp <-
     patchR_
       { headers: [ apiHeaders token ] }
       url
-      (Just $ { state: "open", title, body }) ::
+      (Just issueContent) ::
       Aff (Either HTTPError Unit)
   pure $ either (unsafeCrashWith <<< show) (identity) resp
   where
@@ -68,3 +63,9 @@ requestPatchIssue token { title, body } = do
   issue = "1"
 
   url = baseURL <> "/repos/" <> user <> "/" <> repo <> "/issues/" <> issue
+
+baseURL :: URL
+baseURL = "https://api.github.com"
+
+apiHeaders :: GithubToken -> RequestHeader
+apiHeaders (GithubToken token) = RequestHeader "Authorization" ("Bearer " <> token)

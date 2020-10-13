@@ -33,6 +33,10 @@ data Package
     , dependencies :: Array String
     }
 
+derive instance eqPackage :: Eq Package
+
+derive instance ordPackage :: Ord Package
+
 instance showPackage :: Show Package where
   show (Package { name, repoUser, repoName }) = name <> " (" <> repoUser <> "/" <> repoName <> ")"
 
