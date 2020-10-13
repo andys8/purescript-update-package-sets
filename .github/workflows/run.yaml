@@ -22,4 +22,4 @@ jobs:
       - run: npm install
       - run: npm run build
       - name: Compare versions
-        run: npm start ${{ secrets.GITHUB_TOKEN }}
+        run: npm start ${{ secrets.GH_TOKEN_CUSTOM }}
