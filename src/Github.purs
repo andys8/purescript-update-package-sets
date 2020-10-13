@@ -56,11 +56,11 @@ requestPatchIssue token issueContent = do
       Aff (Either HTTPError Unit)
   pure $ either (unsafeCrashWith <<< show) (identity) resp
   where
-  user = "andys8"
+  user = "purescript"
 
   repo = "package-sets"
 
-  issue = "1"
+  issue = "728"
 
   url = baseURL <> "/repos/" <> user <> "/" <> repo <> "/issues/" <> issue
 
