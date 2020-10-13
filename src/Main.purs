@@ -3,7 +3,6 @@ module Main where
 import Prelude
 import Control.Monad.State (StateT, execStateT, modify_)
 import Control.Monad.Trans.Class (lift)
-import Data.Array (take)
 import Data.Foldable (traverse_)
 import Data.Map (Map)
 import Data.Map as M
@@ -28,9 +27,10 @@ main = do
 run :: GithubToken -> Aff Unit
 run token = do
   packages <- requestPackages
-  let
-    state = traverse_ (runPackage token) (take 2 packages) -- TODO: Remove limit
-  packageComparison <- execStateT state M.empty
+  packageComparison <-
+    execStateT
+      (traverse_ (runPackage token) packages)
+      M.empty
   requestPatchIssue token $ mkIssueContent packageComparison
   liftEffect $ exit 0
 
@@ -40,5 +40,5 @@ runPackage token package = do
   log $ show package <> " " <> show comparison
   case comparison of
     VersionOkay _ -> pure unit
-    VersionOutdated _ _ -> modify_ (M.insert package comparison)
-    VersionComparisonFailed _ -> modify_ (M.insert package comparison)
+    VersionOutdated _ _ -> modify_ $ M.insert package comparison
+    VersionComparisonFailed _ -> modify_ $ M.insert package comparison
