@@ -1,4 +1,4 @@
-module Github where
+module Github (GithubToken(..), IssueContent, requestTags, requestPatchIssue) where
 
 import Prelude
 import Affjax (URL)
@@ -58,11 +58,13 @@ requestPatchIssue token issueContent = do
   where
   user = "purescript"
 
-  repo = "package-sets"
+  repoName = "package-sets"
 
+  -- The github issue id of an issue that will be updated.
+  -- The github token has to have the rights to modify it.
   issue = "728"
 
-  url = baseURL <> "/repos/" <> user <> "/" <> repo <> "/issues/" <> issue
+  url = baseURL <> "/repos/" <> user <> "/" <> repoName <> "/issues/" <> issue
 
 baseURL :: URL
 baseURL = "https://api.github.com"

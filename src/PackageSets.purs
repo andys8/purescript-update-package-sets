@@ -1,4 +1,4 @@
-module PackageSets where
+module PackageSets (Package(..), requestPackages) where
 
 import Prelude
 import Affjax (URL)

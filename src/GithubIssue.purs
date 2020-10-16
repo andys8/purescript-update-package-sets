@@ -1,4 +1,4 @@
-module GithubIssue where
+module GithubIssue (mkIssueContent) where
 
 import Prelude
 import Data.Array (intercalate)
@@ -9,6 +9,9 @@ import Github (IssueContent)
 import PackageSets (Package)
 import VersionCompare (VersionComparison)
 
+-- | Create the content of the github issue shows the current state
+-- | It contains the packages that can be updated
+-- | The state can be 'open' or 'closed' (github api)
 mkIssueContent :: Map Package VersionComparison -> IssueContent
 mkIssueContent packageComparison = { title, body, state }
   where

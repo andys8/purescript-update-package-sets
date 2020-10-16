@@ -1,4 +1,4 @@
-module Version (parseVersion, Version) where
+module Version (Version, parseVersion) where
 
 import Prelude
 import Data.Array (catMaybes, intercalate, mapMaybe)

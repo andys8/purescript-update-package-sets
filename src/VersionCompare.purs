@@ -1,4 +1,4 @@
-module VersionCompare (runComparison, comparePackage, VersionComparison(..)) where
+module VersionCompare (VersionComparison(..), runComparison, comparePackage) where
 
 import Prelude
 import Data.Array (last, mapMaybe, sort)

@@ -1,4 +1,4 @@
-module Main where
+module Main (main) where
 
 import Prelude
 import Control.Monad.State (StateT, execStateT, modify_)
