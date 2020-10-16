@@ -10,11 +10,11 @@ import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
-import Github (GithubToken(..), requestPatchIssue)
+import Github (GithubToken(..), IssueContent, requestPatchIssue)
 import GithubIssue (mkIssueContent)
 import Node.Process (argv, exit)
 import PackageSets (Package, requestPackages)
-import VersionCompare (VersionComparison(..), comparePackage)
+import VersionCompare (VersionComparison(..), checkPackageForUpdates)
 
 main :: Effect Unit
 main = do
@@ -31,14 +31,24 @@ run token = do
     execStateT
       (traverse_ (runPackage token) packages)
       M.empty
-  requestPatchIssue token $ mkIssueContent packageComparison
+  let
+    issueContent = mkIssueContent packageComparison
+  requestPatchIssue token issueContent
+  printIssueContent issueContent
   liftEffect $ exit 0
 
 runPackage :: GithubToken -> Package -> StateT (Map Package VersionComparison) Aff Unit
 runPackage token package = do
-  comparison <- lift $ comparePackage token package
+  comparison <- lift $ checkPackageForUpdates token package
   log $ show package <> " " <> show comparison
   case comparison of
     VersionOkay _ -> pure unit
-    VersionOutdated _ _ -> modify_ $ M.insert package comparison
-    VersionComparisonFailed _ -> modify_ $ M.insert package comparison
+    VersionOutdated _ _ -> insertInResult comparison
+    VersionComparisonFailed _ -> insertInResult comparison
+  where
+  insertInResult comparison = modify_ $ M.insert package comparison
+
+printIssueContent :: IssueContent -> Aff Unit
+printIssueContent { title, body } = do
+  log title
+  log body

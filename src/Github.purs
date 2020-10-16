@@ -29,6 +29,7 @@ type IssueContent
     , state :: String
     }
 
+-- | Query list of tags of a repository
 requestTags :: GithubToken -> Repository -> Aff (Array TagName)
 requestTags token repository = do
   resp <-
@@ -46,6 +47,7 @@ requestTags token repository = do
       <> repoName
       <> "/tags"
 
+-- | Update a github issue with content and state
 requestPatchIssue :: GithubToken -> IssueContent -> Aff Unit
 requestPatchIssue token issueContent = do
   resp <-

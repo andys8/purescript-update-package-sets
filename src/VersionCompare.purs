@@ -1,11 +1,9 @@
-module VersionCompare (VersionComparison(..), runComparison, comparePackage) where
+module VersionCompare (VersionComparison(..), checkPackageForUpdates) where
 
 import Prelude
 import Data.Array (last, mapMaybe, sort)
 import Data.Either (hush)
 import Data.Maybe (Maybe(..))
-import Data.Traversable (traverse)
-import Data.Tuple (Tuple(..))
 import Effect.Aff (Aff)
 import Github (GithubToken, requestTags)
 import PackageSets (Package(..))
@@ -21,15 +19,8 @@ instance showVersionComparison :: Show VersionComparison where
   show (VersionOutdated v1 v2) = show v1 <> " -> " <> show v2 <> " ✖"
   show (VersionComparisonFailed err) = "[ERROR] " <> err
 
-runComparison :: GithubToken -> Array Package -> Aff (Array (Tuple Package VersionComparison))
-runComparison token packages = traverse f packages
-  where
-  f package = do
-    result <- comparePackage token package
-    pure $ Tuple package result
-
-comparePackage :: GithubToken -> Package -> Aff VersionComparison
-comparePackage token package@(Package { repoUser, repoName }) = do
+checkPackageForUpdates :: GithubToken -> Package -> Aff VersionComparison
+checkPackageForUpdates token package@(Package { repoUser, repoName }) = do
   tags <- requestTags token { repoUser, repoName }
   let
     versions = mapMaybe (hush <<< parseVersion) tags
