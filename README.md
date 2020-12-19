@@ -2,6 +2,14 @@
 
 Check purescript package sets for newer versions.
 
+## ⚠️ Deprecated
+
+This project [was merged into `purescript/package-sets`](https://github.com/purescript/package-sets/pull/733).
+
+<https://github.com/purescript/package-sets/tree/master/ci>
+
+---
+
 ## Usage
 
 ```shell
